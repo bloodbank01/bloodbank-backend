@@ -21,7 +21,7 @@ export const db: Sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   port: Number(dbPort),
   dialect: "postgres", //|'sqlite'|'postgres'|'mssql'
   dialectOptions,
-  logging: true,
+  // logging: true,
   pool: {
     max: 5,
     min: 0,

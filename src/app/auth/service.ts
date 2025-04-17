@@ -117,7 +117,7 @@ class AuthService {
         return Handler.Error(RES_STATUS.E2, STATUS_CODE.EC401, "Email Not Verified Please Verify To Login!")
       }
 
-      if(!exitUser?.dataValues?.password){
+      if (!exitUser?.dataValues?.password) {
         return Handler.Error(RES_STATUS.E2, STATUS_CODE.EC400, "Please Forgot Your Password!")
       }
 
@@ -234,6 +234,7 @@ class AuthService {
     try {
 
       const token: any = await req.header('Authorization')?.replace('Bearer ', '');
+      console.log("🚀 ~ AuthService ~ logoutService ~ token:", token)
       const { userId } = req
 
       const exitUser: any = await Users.findOne({ where: { id: userId } })
@@ -300,9 +301,9 @@ class AuthService {
       // Get user details from the token
       // const payload = ticket.getPayload();
 
-      const {data, status, message} = await this.validateGoogleToken(token)
+      const { data, status, message } = await this.validateGoogleToken(token)
 
-      if(!status){
+      if (!status) {
         return Handler.Error(RES_STATUS.E2, STATUS_CODE.EC400, message)
       }
 
@@ -328,7 +329,7 @@ class AuthService {
         }
 
         if (!exitUser.is_email_verified) {
-          return Handler.Error(RES_STATUS.E2, STATUS_CODE.EC401, "Email Not Verified Please Verify To Login!")
+          await Users.update({ is_email_verified: true }, { where: { id: exitUser?.dataValues.id } })
         }
 
         if (exitUser.dataValues.login_token != null) {
