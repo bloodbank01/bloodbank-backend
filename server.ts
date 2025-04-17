@@ -9,6 +9,7 @@ const port = process.env.SERVER_PORT || 3000;
 import bodyParser from 'body-parser'
 import authRoute from './src/app/auth/router'
 import fileConfigRoute from './src/app/file_config/router'
+import axios from 'axios'
 
 db.sync({
     alter: false,
@@ -53,6 +54,17 @@ app.get('/', (req, res) => {
 app.get('/healthcheck', (req, res) => {
     res.status(200).send('Service is healthy');
 });
+
+setInterval(() => {
+    (async () => {
+        try {
+            const response = await axios.get('https://bloodbank-backend-e8cg.onrender.com/healthcheck');
+            console.log('Healthcheck response:', response.data);
+        } catch (error) {
+            console.error('Error during healthcheck:', error);
+        }
+    })()
+}, 3 * 60 * 1000);
 
 
 app.use('/file', fileConfigRoute)
